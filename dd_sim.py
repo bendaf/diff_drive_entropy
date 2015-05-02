@@ -2,7 +2,7 @@ import math
 import numpy as np
 from matplotlib import pyplot as plt
 from matplotlib import animation
-from matplotlib.patches import RegularPolygon
+from matplotlib.patches import RegularPolygon, FancyBboxPatch
 import matplotlib.image as mpimg
 
 deg = np.pi / 180
@@ -36,7 +36,7 @@ class Agent:
         decision1 = Agent((self.x, self.y), self.size, self.angle + init_turn * deg)
         # decision1.move()
         decision2 = Agent((self.x, self.y), self.size, self.angle - init_turn * deg)
-        #decision2.move()
+        # decision2.move()
         for i in range(N):
             decision1.x = self.x
             decision1.y = self.y
@@ -76,7 +76,7 @@ class Agent:
         d2 = len(futures[1])
         decision = 5 * (d1 / (d1 + d2)) + (-5) * (d2 / (d1 + d2))
         # print(d1, d2)
-        #self.angle += int(round(decision))*deg
+        # self.angle += int(round(decision))*deg
         self.angle += decision * deg * 10 * self.factor
         #print(self.angle)
 
@@ -91,9 +91,9 @@ class Agent:
             if track[int(round(y))][int(round(x))] != [255., 255., 255.]:
                 collision = True
 
-                #collision_points.append((x, y))
+                # collision_points.append((x, y))
         colfigure = plt.figure(2)
-        #plt.axes(xlim=(0, 640), ylim=(0, 480), aspect='equal')
+        # plt.axes(xlim=(0, 640), ylim=(0, 480), aspect='equal')
         #plt.plot([p[0] for p in collision_points], [p[1] for p in collision_points], 'o', ms=1)
         if collision:
             self.factor += 0.05
@@ -125,7 +125,18 @@ class Agent:
         for i in range(n):
             degree = i / 10 - 5
             # distances.append(self.get_distance(degree))
-            print('distance in ', int(round(degree*10))/10, ' is ', int(round(self.get_distance(degree))))
+            dist = self.get_distance(degree)
+            print('distance in ', int(round(degree * 10)) / 10, ' is ', int(round(dist)))
+            plt.plot([0, math.sin(math.radians(degree)) * dist], [0, math.cos(math.radians(degree)) * dist])
+            #
+            # ax = fig.add_subplot(111)
+            # plt.plot(range(500))
+            # p_fancy = FancyBboxPatch((0, 0),
+            # abs(500), abs(500),
+            #                          boxstyle="round,pad=0.1",
+            #                          fc=(1., .8, 1.),ec=(1., 0.5, 1.))
+            # ax.add_patch(p_fancy)
+
         return distances
 
 # -------------------------------------------
@@ -135,7 +146,7 @@ pause = False
 
 def onClick(event):
     global pause
-    #print('pause: ', pause)
+    # print('pause: ', pause)
     agent.x = event.xdata
     agent.y = event.ydata
     pause ^= True
@@ -148,10 +159,10 @@ def press(event):
 
 
 fig = plt.figure()
-
+plt.hold(True)
 img = mpimg.imread('track_ps.bmp')
 track = img.tolist()
-#print(len(track), len(track[0]))  # 480, 640
+# print(len(track), len(track[0]))  # 480, 640
 
 #ax = plt.axes(xlim=(0, len(track[0])), ylim=(0, len(track)), aspect='equal')  # így lefejjel rajzolta ki a képet
 ax = fig.add_subplot(111)
@@ -182,6 +193,7 @@ def animate(i):
         agent.move()
         square.xy = (agent.x, agent.y)
         square.orientation = np.pi / 4 + agent.angle
+        #plt.plot(range(500))
     return [square]
 
 
