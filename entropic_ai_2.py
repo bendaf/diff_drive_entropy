@@ -69,13 +69,16 @@ class Agent:
 
     def draw(self):
         pygame.draw.circle(screen, (255, 0, 0), (int(self.p_x), int(self.p_y)), self.size, 1)
-        pygame.draw.rect(screen, (255, 0, 0), (self.p_x-1, self.p_y-1, 2, 2))
+        #pygame.draw.rect(screen, (255, 0, 0), (self.p_x-1, self.p_y-1, 2, 2))
         pygame.draw.aaline(screen, (255, 0, 0), (int(self.p_x), int(self.p_y)),
                            (int(self.p_x+8*math.cos(self.orientation)), int(self.p_y+8*math.sin(self.orientation))))
 
+    def sensor(self):
+        
+
     def future_states(self):
         angle_decision_list = list(range(-self.look_angle, self.look_angle+1))
-        futures_diff_speed = [set(), set()]
+        final_positions = [set(), set()]
         final_speed = 0
 
         leftClone = Agent((self.p_x, self.p_y), self.size, self.speed, self.orientation)
@@ -86,6 +89,7 @@ class Agent:
             speeds = [self.speed-0.2, self.speed]
         elif self.speed == 0.0:
             speeds = [self.speed, self.speed+0.2]
+
         for speed in speeds:
             futures = (set(), set())
             for i in range(self.number_of_paths):
@@ -113,10 +117,10 @@ class Agent:
                     if not is_free(int(rightClone.p_x), int(rightClone.p_y)):
                         break
                 futures[1].add((int(round(rightClone.p_x)), int(round(rightClone.p_y))))
-            if len(futures_diff_speed[0])+len(futures_diff_speed[1]) < len(futures[0])+len(futures[1]):
-                futures_diff_speed = (futures[0], futures[1])
+            if len(final_positions[0])+len(final_positions[1]) < len(futures[0])+len(futures[1]):
+                final_positions = (futures[0], futures[1])
                 final_speed = max(min(speed, 3.0), 0.0)  # normalize speed
-        return futures_diff_speed, final_speed
+        return final_positions, final_speed
 
     def simulate(self):
         fut, s = self.future_states()
