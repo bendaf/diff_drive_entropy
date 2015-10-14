@@ -13,7 +13,6 @@ import sys
 from PIL import Image
 import random
 import math
-import matplotlib.image as mpimg
 
 pygame.init()
 clock = pygame.time.Clock()
