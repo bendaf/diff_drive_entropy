@@ -59,6 +59,7 @@ class Agent:
         self.number_of_paths = 40
         self.time_horizon = 20
         self.look_angle = 10
+        self.step_per_degree = 20
 
     def in_bounds(self):
         return 0 <= self.p_x <= width and 0 <= self.p_y <= height
@@ -74,7 +75,59 @@ class Agent:
                            (int(self.p_x+8*math.cos(self.orientation)), int(self.p_y+8*math.sin(self.orientation))))
 
     def sensor(self):
-        
+        n = self.step_per_degree*self.sensor_angle
+        distances = list()
+        for i in range(n):
+            degree = i / self.step_per_degree - self.sensor_angle/2 + self.orientation/rad
+
+            # distances.append(self.get_distance(degree))
+            dist = self.get_distance(degree)
+            distances.append(dist)
+            # print('distance in ', int(round(degree * 10)) / 10, ' is ', int(round(dist)))
+            # draw_pixel(screen, 0, 255, 0, self.p_x + int(math.cos(math.radians(degree)+self.orientation/rad) * dist),
+            #           int(self.p_y + math.sin(math.radians(degree)+self.orientation) * dist))
+            #plt.plot([self.x + 0, self.x + math.cos(math.radians(degree)+self.angle) * dist],
+            #         [self.y + 0, self.y + math.sin(math.radians(degree)+self.angle) * dist])
+            #if degree == 0:
+            #    print(int(self.p_x + math.sin(math.radians(degree) * dist)), " ",
+            #          int(self.p_y + math.cos(math.radians(degree)) * dist))
+        # print(round(degree,1))
+        return distances
+
+    def get_distance(self, degree):
+        if 0 < degree % 360 <= 90:
+            current_x = 0.1
+            current_y = 0.1
+        elif 90 < degree % 360 <= 180:
+            current_x = -0.1
+            current_y = 0.1
+        elif 180 < degree % 360 <= 270:
+            current_x = -0.1
+            current_y = -0.1
+        else:
+            current_x = 0.1
+            current_y = -0.1
+
+        while is_free(int(round(self.p_x + current_x)), int(round(self.p_y + current_y))):
+            real_y = current_x * math.tan(math.radians(degree))
+            try:
+                real_x = current_y / math.tan(math.radians(degree))
+            except ZeroDivisionError:
+                real_x = 0
+
+            if abs(real_x) > abs(real_y):
+                if real_x > 0:
+                    current_x += 1
+                else:
+                    current_x -= 1
+            else:
+                if real_y > 0:
+                    current_y += 1
+                else:
+                    current_y -= 1
+
+            draw_pixel(screen, 255, 0, 0, int(self.p_x + current_x), int(self.p_y + current_y))
+        return math.hypot(current_x, current_y)
 
     def future_states(self):
         angle_decision_list = list(range(-self.look_angle, self.look_angle+1))
@@ -123,6 +176,7 @@ class Agent:
         return final_positions, final_speed
 
     def simulate(self):
+        self.sensor()
         fut, s = self.future_states()
         d1 = len(fut[0])
         d2 = len(fut[1])
