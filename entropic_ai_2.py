@@ -59,7 +59,8 @@ class Agent:
         self.number_of_paths = 40
         self.time_horizon = 20
         self.look_angle = 10
-        self.step_per_degree = 20
+        self.step_per_degree = 10
+        self.sensor_angle = 20
 
     def in_bounds(self):
         return 0 <= self.p_x <= width and 0 <= self.p_y <= height
@@ -84,8 +85,8 @@ class Agent:
             dist = self.get_distance(degree)
             distances.append(dist)
             # print('distance in ', int(round(degree * 10)) / 10, ' is ', int(round(dist)))
-            # draw_pixel(screen, 0, 255, 0, self.p_x + int(math.cos(math.radians(degree)+self.orientation/rad) * dist),
-            #           int(self.p_y + math.sin(math.radians(degree)+self.orientation) * dist))
+            draw_pixel(screen, 0, 255, 0, self.p_x + int(math.cos(math.radians(degree)) * dist),
+                      int(self.p_y + math.sin(math.radians(degree)) * dist))
             #plt.plot([self.x + 0, self.x + math.cos(math.radians(degree)+self.angle) * dist],
             #         [self.y + 0, self.y + math.sin(math.radians(degree)+self.angle) * dist])
             #if degree == 0:
@@ -126,7 +127,7 @@ class Agent:
                 else:
                     current_y -= 1
 
-            draw_pixel(screen, 255, 0, 0, int(self.p_x + current_x), int(self.p_y + current_y))
+            # draw_pixel(screen, 255, 0, 0, int(self.p_x + current_x), int(self.p_y + current_y))
         return math.hypot(current_x, current_y)
 
     def future_states(self):
@@ -204,7 +205,7 @@ while running:
                 running = False
                 sys.exit()
             if event.key == pygame.K_p:
-                paused = True
+                paused ^= True
 
 
         if event.type == pygame.MOUSEBUTTONDOWN:
