@@ -7,7 +7,7 @@ from robot_with_sensor import SRobot
 pygame.init()
 
 # load map with PIL
-image_filename = "track_new_3.bmp"
+image_filename = "labirinth.bmp"
 
 
 class Environment:

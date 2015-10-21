@@ -30,63 +30,6 @@ class Robot:
         pygame.draw.aaline(surface, (255, 0, 0), self.pos.as_int(),
                            (int(self.pos.x+head*math.cos(angle_rad)), int(self.pos.y+head*math.sin(angle_rad))))
 
-    def sensor(self):
-        step_per_degree = 10
-        sensor_angle = 20
-        n = step_per_degree * sensor_angle
-        distances = list()
-        for i in range(n):
-            degree = i / step_per_degree - sensor_angle/2 + self.angle
-
-            # distances.append(self.get_distance(degree))
-            dist = self.get_distance(degree)
-            distances.append(dist)
-            # print('distance in ', int(round(degree * 10)) / 10, ' is ', int(round(dist)))
-            # draw_pixel(screen, 0, 255, 0, self.p_x + int(math.cos(math.radians(degree)) * dist),
-            #           int(self.p_y + math.sin(math.radians(degree)) * dist))
-            #plt.plot([self.x + 0, self.x + math.cos(math.radians(degree)+self.angle) * dist],
-            #         [self.y + 0, self.y + math.sin(math.radians(degree)+self.angle) * dist])
-            #if degree == 0:
-            #    print(int(self.p_x + math.sin(math.radians(degree) * dist)), " ",
-            #          int(self.p_y + math.cos(math.radians(degree)) * dist))
-        # print(round(degree,1))
-        return distances
-
-    def get_distance(self, degree):
-        if 0 < degree % 360 <= 90:
-            current_x = 0.1
-            current_y = 0.1
-        elif 90 < degree % 360 <= 180:
-            current_x = -0.1
-            current_y = 0.1
-        elif 180 < degree % 360 <= 270:
-            current_x = -0.1
-            current_y = -0.1
-        else:
-            current_x = 0.1
-            current_y = -0.1
-
-        while self.environment.is_free(int(self.pos.x + current_x), int(self.pos.y + current_y)):
-            real_y = current_x * math.tan(math.radians(degree))
-            try:
-                real_x = current_y / math.tan(math.radians(degree))
-            except ZeroDivisionError:
-                real_x = 0
-
-            if abs(real_x) > abs(real_y):
-                if real_x > 0:
-                    current_x += 1
-                else:
-                    current_x -= 1
-            else:
-                if real_y > 0:
-                    current_y += 1
-                else:
-                    current_y -= 1
-
-        self.environment.draw_pixel(0, 255, 0, int(self.pos.x + current_x), int(self.pos.y + current_y))
-        return math.hypot(current_x, current_y)
-
     def calculate_different_macrostates(self, option, speed):
         macrostates = set()
         angle_options = list(range(-self.lookAngle, self.lookAngle+1))
