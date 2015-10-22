@@ -98,12 +98,14 @@ while running:
                 print("max speed = ", robot_list[0].maxSpeed)
 
         if event.type == pygame.MOUSEBUTTONDOWN:
-            print(pygame.mouse.get_pos())
-            robot_list[0].pos.x, robot_list[0].pos.y = pygame.mouse.get_pos()
-            robot_list[0].speed = 0
-            robot_list[1].pos.x, robot_list[1].pos.y = pygame.mouse.get_pos()
-            robot_list[1].speed = 0
-            walked_path.clear()
+            print("position ", pygame.mouse.get_pos())
+            if event.button == 1:  # LEFT = 1
+                robot_list[0].pos.x, robot_list[0].pos.y = pygame.mouse.get_pos()
+                robot_list[0].speed = 0
+            if event.button == 3:  # RIGHT = 3
+                robot_list[1].pos.x, robot_list[1].pos.y = pygame.mouse.get_pos()
+                robot_list[1].speed = 0
+            #walked_path.clear()
 
     # screen.blit(background, [0, 0])  # redraw clean background
     # Update:
