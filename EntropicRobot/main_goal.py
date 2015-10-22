@@ -8,7 +8,7 @@ pygame.init()
 
 # load map with PIL
 #image_filename = "track_new_3.bmp"
-image_filename = "empty.bmp"
+image_filename = "circle.bmp"
 
 
 class Environment:
@@ -52,7 +52,7 @@ velocity_font = pygame.font.Font(None, 30)
 
 goal = Goal(width-50, 350)
 # myRobot = Robot(environment, 560, 90, 7)
-myRobot = Robot(environment, width/2, height/2, 7, g=goal.pos)
+myRobot = Robot(environment, width/2, height/2, 7, goal=goal.pos)
 walked_path = list()
 
 clock = pygame.time.Clock()
@@ -107,8 +107,7 @@ while running:
         future_positions = myRobot.simulate()
         myRobot.move()
         walked_path.append(myRobot.pos.as_int())
-        for p in future_positions:
-            draw_pixel(screen, 0, 0, 255, *p)
+        myRobot.draw_futures(screen, future_positions)
 
     # Draw
     myRobot.draw(screen)
