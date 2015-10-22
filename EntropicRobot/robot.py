@@ -5,7 +5,7 @@ from vector_math import Vector2
 
 
 class Robot:
-    def __init__(self, environment, x=0, y=0, size=5, speed=0.0, a=0):
+    def __init__(self, environment, x=0, y=0, size=5, speed=0.0, a=0, color=(255, 0, 0)):
         self.environment = environment
         self.pos = Vector2(x, y)
         self.size = size
@@ -19,15 +19,17 @@ class Robot:
         self.timeHorizon = 25
         self.lookAngle = 10
 
+        self.color = color
+
     def move(self):
         self.pos.x += math.cos(math.radians(self.angle)) * self.speed
         self.pos.y += math.sin(math.radians(self.angle)) * self.speed
 
     def draw(self, surface):
         angle_rad = math.radians(self.angle)
-        pygame.draw.circle(surface, (255, 0, 0), self.pos.as_int(), self.size, 1)
+        pygame.draw.circle(surface, self.color, self.pos.as_int(), self.size, 1)
         head = self.size+1
-        pygame.draw.aaline(surface, (255, 0, 0), self.pos.as_int(),
+        pygame.draw.aaline(surface, self.color, self.pos.as_int(),
                            (int(self.pos.x+head*math.cos(angle_rad)), int(self.pos.y+head*math.sin(angle_rad))))
 
     def calculate_different_macrostates(self, option, speed):

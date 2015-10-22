@@ -5,7 +5,7 @@ from vector_math import Vector2
 
 
 class Robot:
-    def __init__(self, environment, x=0, y=0, size=5, speed=3.0, a=0, g=Vector2(0, 0)):
+    def __init__(self, environment, x=0, y=0, size=5, speed=3.0, a=0, goal=Vector2(0, 0), color=(255, 0, 0)):
         self.environment = environment
         self.pos = Vector2(x, y)
         self.size = size
@@ -16,10 +16,11 @@ class Robot:
 
         # Entropic AI Parameters
         self.numberOfPaths = 60
-        self.timeHorizon = 30
+        self.timeHorizon = 20
         self.lookAngle = 10
 
-        self.goal = g
+        self.goal = goal
+        self.color = color
 
     def move(self):
         self.pos.x += math.cos(math.radians(self.angle)) * self.speed
@@ -27,10 +28,15 @@ class Robot:
 
     def draw(self, surface):
         angle_rad = math.radians(self.angle)
-        pygame.draw.circle(surface, (255, 0, 0), self.pos.as_int(), self.size, 1)
+        pygame.draw.circle(surface, self.color, self.pos.as_int(), self.size, 1)
         head = self.size+1
-        pygame.draw.aaline(surface, (255, 0, 0), self.pos.as_int(),
+        pygame.draw.aaline(surface, self.color, self.pos.as_int(),
                            (int(self.pos.x+head*math.cos(angle_rad)), int(self.pos.y+head*math.sin(angle_rad))))
+
+    def draw_futures(self, surface, future_points):
+        color = 0, 204, 204
+        for p in future_points:
+            pygame.draw.aaline(surface, color, p, self.goal.as_int())
 
     def sensor(self):
         step_per_degree = 10

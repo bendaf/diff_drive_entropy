@@ -54,9 +54,9 @@ RED = (255, 0, 0)
 YELLOW = (200, 200, 0)
 
 from robot import Robot
-myRobot = Robot(environment, 495, 147, 7, color=RED)
+myRobot = Robot(environment, 495, 147, 7, speed=0.2, color=RED)
 robot_list.append(myRobot)
-myRobot2 = Robot(environment, 495, 147, 7, color=YELLOW)
+myRobot2 = Robot(environment, 495, 147, 7, speed=0.2, color=YELLOW)
 robot_list.append(myRobot2)
 
 """
